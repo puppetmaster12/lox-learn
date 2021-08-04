@@ -68,6 +68,7 @@ public class Scanner {
                 break;
             case '=':
                 addToken(match('=') ? EQUAL_EQUAL : EQUAL);
+                break;
             case '<':
                 addToken(match('=') ? LESS_EQUAL : LESS);
                 break;
@@ -150,7 +151,7 @@ public class Scanner {
         advance();
 
 //        Trim the quotes and store the raw literal to token
-        String value = source.substring(start + 1, current + 1);
+        String value = source.substring(start + 1, current - 1);
         addToken(STRING, value);
     }
 //    Check if the character matches with the next character
