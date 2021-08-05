@@ -76,9 +76,15 @@ public class Scanner {
                 addToken(match('=') ? GREATER_EQUAL : GREATER);
                 break;
             case '/':
+//                Inline commments
                 if(match('/')){
                     while(peek() != '\n' && !isAtEnd()) advance();
-                } else{
+                }
+//                Block comments
+                else if(match('*')){
+                    blockComments();
+                }
+                else{
                     addToken(SLASH);
                 }
                 break;
@@ -134,6 +140,18 @@ public class Scanner {
         }
 
         addToken(NUMBER, Double.parseDouble(source.substring(start, current)));
+    }
+//    Block comments
+    private void blockComments(){
+        int nesting = 1;
+        while(nesting > 0){
+            if(peek() == '/' && peekNext() == '*') nesting++;
+            if(peek() == '*' && peekNext() == '/') nesting--;
+            if(peek() == '\n') line++;
+            if(peek() == '\0') Lox.error(line, "Unterminated block comment");
+            advance();
+        }
+        if(advance() == '*') advance();
     }
 //    Consume string literals
     private void string(){
